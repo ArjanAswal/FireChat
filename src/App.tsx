@@ -6,6 +6,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
 import authSlice from './store/authSlice';
 import { useDispatch } from 'react-redux';
+import Home from './components/Home';
 
 function App() {
   const { isAuthenticated } = useAppSelector(state => state.auth);
@@ -121,7 +122,7 @@ function App() {
     <>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        {!isAuthenticated && <Auth />}
+        {isAuthenticated ? <Home /> : <Auth />}
       </ThemeProvider>
     </>
   );
