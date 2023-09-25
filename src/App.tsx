@@ -4,7 +4,7 @@ import { useAppSelector } from './store/hooks';
 import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
-import authSlice, { login } from './store/authSlice';
+import authSlice from './store/authSlice';
 import { useDispatch } from 'react-redux';
 
 function App() {
