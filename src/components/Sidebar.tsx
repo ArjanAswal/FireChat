@@ -20,7 +20,6 @@ import {
   collection,
   getDocs,
   where,
-  documentId,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAppSelector } from '../store/hooks';
@@ -109,7 +108,7 @@ const Sidebar: FC<SidebarProps> = ({
             >
               <Avatar
                 alt={result.data().displayName}
-                src={result.data().image}
+                src={result.data().avatar}
               />
               <Box marginLeft={2}>
                 <Typography variant='body1' fontWeight={600}>
@@ -159,7 +158,7 @@ const Sidebar: FC<SidebarProps> = ({
                 selectChat(chatData);
               }}
             >
-              <Avatar alt='Direct Messages' src={chatData.user.data().image} />
+              <Avatar alt='Direct Messages' src={chatData.user.data().avatar} />
               <Box marginLeft={2}>
                 <Typography variant='body1' fontWeight={600}>
                   {chatData.user.data().displayName}

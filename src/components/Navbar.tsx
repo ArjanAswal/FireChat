@@ -40,7 +40,7 @@ const Navbar: FC<NavbarProps> = ({ handleDrawerToggle, currentChat }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Avatar alt='Direct Messages' src={currentChat?.user.data().image} />
+        <Avatar alt='Direct Messages' src={currentChat?.user.data().avatar} />
         <Typography variant='h6' noWrap component='div' marginX={2}>
           {currentChat?.user.data().displayName}
         </Typography>

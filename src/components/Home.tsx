@@ -12,7 +12,6 @@ import {
   documentId,
   getDocs,
   onSnapshot,
-  orderBy,
   query,
   serverTimestamp,
   where,

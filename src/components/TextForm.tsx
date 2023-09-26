@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 
-import { TextField, IconButton, Box, CircularProgress } from '@mui/material';
+import { TextField, IconButton, Box } from '@mui/material';
 
 import SendIcon from '@mui/icons-material/Send';
 
