@@ -12,14 +12,10 @@ export const createAvatar = auth.user().onCreate(async user => {
       photoURL ||
       `https://api.dicebear.com/7.x/lorelei/svg?seed=${uid}&&backgroundColor=${bgColor}`;
 
-    console.log({ avatar: imageURL }, { merge: true });
-
     await firestore()
       .collection('users')
       .doc(uid)
       .set({ avatar: imageURL }, { merge: true });
-
-    console.log({ avatar: imageURL }, { merge: true });
   } catch (error) {
     logger.error('Error.createAvatar(): ', error);
     return 'Error creating avatar';
