@@ -17,7 +17,7 @@ const TextForm: FC<TextFormProps> = ({ onSubmit }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await onSubmit(message);
+    onSubmit(message);
     setMessage('');
   };
 
@@ -37,7 +37,6 @@ const TextForm: FC<TextFormProps> = ({ onSubmit }) => {
           value={message}
           onChange={handleChange}
           variant='filled'
-          multiline={true}
           sx={{
             backgroundColor: 'background.paper',
             borderRadius: 2,

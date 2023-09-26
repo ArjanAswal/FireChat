@@ -3,7 +3,7 @@ import { logger, storage } from 'firebase-functions/v1';
 
 export const handleImageUpload = storage.object().onFinalize(async object => {
   try {
-    const { bucket, name, owner, contentType } = object;
+    const { bucket, name, contentType } = object;
 
     if (!contentType?.includes('image')) {
       throw new Error('Uploaded file is not an image');
@@ -13,19 +13,17 @@ export const handleImageUpload = storage.object().onFinalize(async object => {
       throw new Error('Image is not a user avatar');
     }
 
-    if (!owner || !owner.entityId) {
-      throw new Error('Image has no owner');
-    }
-
-    if (name.split('/')[1].split('.')[0] !== owner.entityId) {
-      throw new Error('Image owner does not match');
-    }
+    const owner = name.split('/')[1].split('.')[0];
 
     await firestore()
       .collection('users')
-      .doc(owner?.entityId)
+      .doc(owner)
       .set(
-        { avatar: `https://storage.googleapis.com/${bucket}/${name}` },
+        {
+          avatar: `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(
+            name
+          )}?alt=media`,
+        },
         { merge: true }
       );
 

@@ -7,11 +7,12 @@ import {
   updateProfile,
 } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { DocumentData, doc, setDoc } from 'firebase/firestore';
 
 export interface authState {
   isAuthenticated: boolean;
   user: User | null;
+  userData: DocumentData | null;
 }
 
 const authSlice = createSlice({
@@ -20,6 +21,7 @@ const authSlice = createSlice({
   initialState: {
     isAuthenticated: false,
     user: null,
+    userData: null,
   } as authState,
   reducers: {
     signup: (state, action: PayloadAction<User>) => {
@@ -33,6 +35,9 @@ const authSlice = createSlice({
     logout: state => {
       state.isAuthenticated = false;
       state.user = null;
+    },
+    setUserData: (state, action: PayloadAction<DocumentData>) => {
+      state.userData = action.payload;
     },
   },
 });

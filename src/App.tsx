@@ -1,15 +1,24 @@
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import {
+  CssBaseline,
+  Skeleton,
+  ThemeProvider,
+  createTheme,
+} from '@mui/material';
 import Auth from './components/Auth';
 import { useAppSelector } from './store/hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
 import authSlice from './store/authSlice';
 import { useDispatch } from 'react-redux';
 import Home from './components/Home';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 function App() {
-  const { isAuthenticated } = useAppSelector(state => state.auth);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user, userData, isAuthenticated } = useAppSelector(
+    state => state.auth
+  );
   const dispatch = useDispatch();
   // Dark theme
   const darkTheme = createTheme({
@@ -108,6 +117,12 @@ function App() {
   });
 
   useEffect(() => {
+    user?.uid &&
+      onSnapshot(doc(db, 'users', user?.uid), docsSnap => {
+        dispatch(authSlice.actions.setUserData(docsSnap.data()!));
+        setIsLoading(false);
+      });
+
     onAuthStateChanged(auth, userAuth => {
       if (userAuth) {
         // user is logged in, send the user's details to redux, store the current user in the state
@@ -116,13 +131,19 @@ function App() {
         dispatch(authSlice.actions.logout());
       }
     });
-  }, [dispatch]);
+  }, [dispatch, user?.uid]);
 
   return (
     <>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        {isAuthenticated ? <Home /> : <Auth />}
+        {isLoading ? (
+          <Skeleton variant='rectangular' height='100vh' />
+        ) : user && userData && isAuthenticated ? (
+          <Home />
+        ) : (
+          <Auth />
+        )}
       </ThemeProvider>
     </>
   );

@@ -1,17 +1,11 @@
-import {
-  AppBar,
-  Avatar,
-  Button,
-  IconButton,
-  Toolbar,
-  Typography,
-} from '@mui/material';
+import { AppBar, Avatar, IconButton, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { FC } from 'react';
-import { useAppDispatch } from '../store/hooks';
-import { logout } from '../store/authSlice';
+import { FC, useState } from 'react';
+
 import { DRAWER_WIDTH } from '../utils/constants';
 import { chatData } from '../types/chatData';
+import { Settings } from '@mui/icons-material';
+import SettingsModal from './Settings';
 
 interface NavbarProps {
   handleDrawerToggle: () => void;
@@ -20,7 +14,9 @@ interface NavbarProps {
 
 const Navbar: FC<NavbarProps> = ({ handleDrawerToggle, currentChat }) => {
   const drawerWidth = DRAWER_WIDTH;
-  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+  const avatarSrc = currentChat?.user.data().avatar || '';
+  const displayName = currentChat?.user.data().displayName || '';
 
   return (
     <AppBar
@@ -40,25 +36,25 @@ const Navbar: FC<NavbarProps> = ({ handleDrawerToggle, currentChat }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Avatar alt='Direct Messages' src={currentChat?.user.data().avatar} />
+        <Avatar alt='Direct Messages' src={avatarSrc} />
         <Typography variant='h6' noWrap component='div' marginX={2}>
-          {currentChat?.user.data().displayName}
+          {displayName}
         </Typography>
+        <IconButton
+          color='inherit'
+          aria-label='open drawer'
+          edge='start'
+          onClick={() => setOpen(true)}
+          size='large'
+          sx={{
+            position: 'absolute',
+            right: 30,
+          }}
+        >
+          <Settings />
+        </IconButton>
       </Toolbar>
-
-      <Button
-        variant='contained'
-        color='secondary'
-        sx={{
-          position: 'absolute',
-          right: 20,
-          top: 10,
-          display: { xs: 'none', sm: 'block' },
-        }}
-        onClick={() => dispatch(logout())}
-      >
-        Logout
-      </Button>
+      <SettingsModal open={open} setOpen={setOpen} />
     </AppBar>
   );
 };
