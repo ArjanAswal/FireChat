@@ -1,5 +1,15 @@
 import { Box, Paper, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
+import { useAppSelector } from '../store/hooks';
+import { chatData } from '../types/chatData';
+import {
+  DocumentData,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+} from 'firebase/firestore';
+import { db } from '../firebase';
 
 interface ChatProps {
   message: string;
@@ -28,9 +38,40 @@ const Chat: FC<ChatProps> = ({ message, isSent }) => {
   );
 };
 
-interface ChatsProps {}
+interface ChatsProps {
+  currentChat: chatData;
+}
 
-const Chats: FC<ChatsProps> = () => {
+const Chats: FC<ChatsProps> = ({ currentChat }) => {
+  const { user } = useAppSelector(state => state.auth);
+  const [messages, setMessages] = useState<
+    {
+      id: string;
+      data: DocumentData;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    if (currentChat) {
+      onSnapshot(
+        query(
+          collection(db, 'chats', currentChat?.chat?.id, 'messages'),
+          orderBy('createdAt', 'asc')
+        ),
+        docsSnap => {
+          setMessages(
+            docsSnap.docs.map(doc => {
+              return {
+                id: doc.id,
+                data: doc.data(),
+              };
+            })
+          );
+        }
+      );
+    }
+  }, [currentChat]);
+
   return (
     <Box
       component='main'
@@ -39,24 +80,15 @@ const Chats: FC<ChatsProps> = () => {
         p: 1,
       }}
     >
-      <Chat message='Hello!' isSent={false} />
-      <Chat message='Hi there!' isSent={true} />
-      <Chat message='How are you?' isSent={false} />
-      <Chat message='How are you?' isSent={false} />
-      <Chat message='Hi there!' isSent={true} />
-      <Chat message='How are you?' isSent={false} />
-      <Chat message='Hi there!' isSent={true} />
-      <Chat message='How are you?' isSent={false} />
-      <Chat message='Hi there!' isSent={true} />
-      <Chat message='Hi there!' isSent={true} />
-      <Chat message='How are you?' isSent={false} />
-      <Chat message='Hi there!' isSent={true} />
-      <Chat message='How are you?' isSent={false} />
-      <Chat message='Hi there!' isSent={true} />
-      <Chat message='How are you?' isSent={false} />
-      <Chat message='Hi there!' isSent={true} />
-      <Chat message='How are you?' isSent={false} />
-      <Chat message='I am doing well, thanks for asking!' isSent={true} />
+      {messages?.map(message => {
+        return (
+          <Chat
+            key={message.id}
+            message={message.data.text}
+            isSent={message.data.sender === user?.uid}
+          />
+        );
+      })}
     </Box>
   );
 };

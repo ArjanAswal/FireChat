@@ -1,24 +1,23 @@
 import { FC, useState } from 'react';
 
-import { TextField, IconButton, Box } from '@mui/material';
+import { TextField, IconButton, Box, CircularProgress } from '@mui/material';
 
 import SendIcon from '@mui/icons-material/Send';
 
 interface TextFormProps {
-  onSubmit: (message: string) => void;
-  drawerWidth: number;
+  onSubmit: (message: string) => Promise<void>;
 }
 
-const TextForm: FC<TextFormProps> = ({ onSubmit, drawerWidth }) => {
+const TextForm: FC<TextFormProps> = ({ onSubmit }) => {
   const [message, setMessage] = useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit(message);
+    await onSubmit(message);
     setMessage('');
   };
 

@@ -8,16 +8,18 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { FC } from 'react';
-import logo from '/logo.jpeg';
 import { useAppDispatch } from '../store/hooks';
 import { logout } from '../store/authSlice';
+import { DRAWER_WIDTH } from '../utils/constants';
+import { chatData } from '../types/chatData';
 
 interface NavbarProps {
-  drawerWidth: number;
   handleDrawerToggle: () => void;
+  currentChat: chatData;
 }
 
-const Navbar: FC<NavbarProps> = ({ drawerWidth, handleDrawerToggle }) => {
+const Navbar: FC<NavbarProps> = ({ handleDrawerToggle, currentChat }) => {
+  const drawerWidth = DRAWER_WIDTH;
   const dispatch = useAppDispatch();
 
   return (
@@ -38,9 +40,9 @@ const Navbar: FC<NavbarProps> = ({ drawerWidth, handleDrawerToggle }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Avatar alt='Direct Messages' src={logo} />
+        <Avatar alt='Direct Messages' src={currentChat?.user.data().image} />
         <Typography variant='h6' noWrap component='div' marginX={2}>
-          Arjan Aswal
+          {currentChat?.user.data().displayName}
         </Typography>
       </Toolbar>
 

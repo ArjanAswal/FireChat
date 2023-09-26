@@ -53,8 +53,8 @@ export const signup = (
 
     //create user on firestore
     await setDoc(doc(db, 'users', user.uid), {
-      uid: user.uid,
       displayName,
+      displayNameCaseInsensitive: displayName.toLowerCase(),
       email,
     });
 
