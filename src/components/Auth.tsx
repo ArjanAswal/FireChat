@@ -188,7 +188,7 @@ export default function Auth(): JSX.Element {
 
           <Box marginTop={error ? 0 : 6}>
             {loading ? (
-              <CircularProgress />
+              <CircularProgress size={26} />
             ) : (
               <Button type='submit' variant='contained' size='large' fullWidth>
                 {authState === AuthState.LOGIN
