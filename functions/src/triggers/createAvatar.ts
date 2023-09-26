@@ -7,7 +7,10 @@ export const createAvatar = auth.user().onCreate(async user => {
     logger.info('Creating avatar for user', uid);
 
     // generate random hex color
-    const bgColor = Math.floor(Math.random() * 16777215).toString(16);
+    const bgColor = ((Math.random() * 0xffffff) << 0)
+      .toString(16)
+      .padStart(6, '0');
+
     const imageURL =
       photoURL ||
       `https://api.dicebear.com/7.x/lorelei/svg?seed=${uid}&&backgroundColor=${bgColor}`;
