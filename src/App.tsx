@@ -117,11 +117,12 @@ function App() {
   });
 
   useEffect(() => {
-    user?.uid &&
-      onSnapshot(doc(db, 'users', user?.uid), docsSnap => {
-        dispatch(authSlice.actions.setUserData(docsSnap.data()!));
-        setIsLoading(false);
-      });
+    user?.uid
+      ? onSnapshot(doc(db, 'users', user?.uid), docsSnap => {
+          dispatch(authSlice.actions.setUserData(docsSnap.data()!));
+          setIsLoading(false);
+        })
+      : setIsLoading(false);
 
     onAuthStateChanged(auth, userAuth => {
       if (userAuth) {
